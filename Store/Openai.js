@@ -1,11 +1,7 @@
-import { Configuration, OpenAIApi } from "openai";
-
-const apiKey = process.env.NEXT_PUBLIC_OPENAI_API_KEY;
+const { Configuration, OpenAIApi } = require("openai");
 
 const configuration = new Configuration({
-  apiKey,
+  apiKey: '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',
 });
-
 const openai = new OpenAIApi(configuration);
-
 export default openai;

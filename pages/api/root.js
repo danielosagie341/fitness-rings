@@ -13,7 +13,7 @@ export default async function handleChatbot(req, res) {
       },
       {
         role: 'user',
-        content,
+        content: 'hello'
       }
     ]
   });
