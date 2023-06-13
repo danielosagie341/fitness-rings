@@ -5,7 +5,7 @@ const Chatbot = () => {
   const [userInput, setUserInput] = useState('');
   const [aiReply, setAiReply] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const apiKey = "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";
+  const apiKey = "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";
 
   const handleUserInput = async (e) => {
     e.preventDefault();
