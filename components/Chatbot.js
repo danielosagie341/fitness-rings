@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import openai from '@/Store/Openai';
+import { env } from '@/next.config';
+
 
 const Chatbot = () => {
   const [userInput, setUserInput] = useState('');
-  const [aiReply, setAiReply] = useState('');
+  const [aiReply, setAiReply] = useState('')
   const [isLoading, setIsLoading] = useState(false);
-  const apiKey = "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";
 
   const handleUserInput = async (e) => {
     e.preventDefault();
@@ -24,7 +26,7 @@ const Chatbot = () => {
 
       const response = await axios.post('https://api.openai.com/v1/chat/completions', apiRequestBody, {
         headers: {
-          Authorization: `Bearer ${apiKey}`,
+          Authorization: `Bearer ${process.env.NEXT_PUBLIC_API_KEY}`,
           'Content-Type': 'application/json',
         },
       });
