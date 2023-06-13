@@ -29,7 +29,9 @@ const Chatbot = () => {
         },
       });
 
-      const data = response.data;
+    
+//tezer
+        const data = response.data;
 
       if (data.choices && data.choices.length > 0) {
         const assistantMessage = data.choices[0].message.content;
