@@ -1,23 +1,18 @@
-import openai from "@/Store/Openai";
+import axios from 'axios';
 
-export default async function handleChatbot(req, res) {
-    const { content } = req.body;
-  console.log("Content:", content); // Log the value of content)
-  const completion = await openai.createChatCompletion({
-    model: "gpt-3.5-turbo",
-    messages: [
-      {
-        role: 'system',
-        content: 'You are a helpful assistant',
-      },
-      {
-        role: 'user',
-        content: 'hello'
-      }
-    ]
-  });
-  const response = completion.data.choices[0].message.content;
-  console.log("Response:", response); // Log the generated response
+export default async function handler(req, res) {
+  if (req.method === 'GET') {
+    try {
+      // Fetch the API key securely from your server-side environment
+        const apiKey = process.env.API_KEY;
 
-  res.status(200).json(response);
+      // Provide the API key in the response
+      res.status(200).json({ apiKey });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: 'Internal server error' });
+    }
+  } else {
+    res.status(405).json({ message: 'Method not allowed' });
+  }
 }

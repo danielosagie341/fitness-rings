@@ -1,23 +1,36 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import openai from '@/Store/Openai';
-import { env } from '@/next.config';
 
 
 const Chatbot = () => {
   const [userInput, setUserInput] = useState('');
   const [aiReply, setAiReply] = useState('')
   const [isLoading, setIsLoading] = useState(false);
+  const [apiKey, setApiKey] = useState('');
+
+  useEffect(() => {
+    // Fetch the API key from the server-side API route
+    const fetchApiKey = async () => {
+      try {
+        const response = await axios.get('/api/root');
+        const { apiKey } = response.data;
+        setApiKey(apiKey);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    fetchApiKey();
+  }, []);
 
   const handleUserInput = async (e) => {
     e.preventDefault();
-
-    const systemMessage = { role: "system", content: "" };
-    const userMessage = { role: "user", content: userInput };
+    const systemMessage = { role: 'system', content: '' };
+    const userMessage = { role: 'user', content: userInput };
     const apiMessages = [systemMessage, userMessage];
 
     const apiRequestBody = {
-      model: "gpt-3.5-turbo",
+      model: 'gpt-3.5-turbo',
       messages: apiMessages,
     };
 
@@ -26,14 +39,12 @@ const Chatbot = () => {
 
       const response = await axios.post('https://api.openai.com/v1/chat/completions', apiRequestBody, {
         headers: {
-          Authorization: `Bearer ${process.env.NEXT_PUBLIC_API_KEY}`,
+          Authorization: `Bearer ${apiKey}`,
           'Content-Type': 'application/json',
         },
       });
 
-    
-//tezer
-        const data = response.data;
+      const data = response.data;
 
       if (data.choices && data.choices.length > 0) {
         const assistantMessage = data.choices[0].message.content;
