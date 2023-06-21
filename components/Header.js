@@ -38,7 +38,7 @@ const Header = () => {
           }
         
           <div>
-            <h1 className='font-bold'>HI {userData.Name ? userData.Name : userData.email},</h1>
+            <h1 className='font-bold'>HI {userData.Name},</h1>
             <small className='text-xs opacity-50'>{date}</small>
           </div>
           

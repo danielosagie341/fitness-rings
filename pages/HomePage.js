@@ -7,11 +7,11 @@ import Chatbot from '@/components/Chatbot'
 const HomePage = () => {
 
   return (
-      <div className='min-h-screen no-scrollbar overflow-scroll'>
-          <Header />
-          <Hero />
-          <Chatbot />
-          <YourActivities />
+      <div className='min-h-screen no-scrollbar overflow-scroll lg:px-20'>
+        <Header />
+        <Hero />
+        <Chatbot />
+        <YourActivities />
       </div>
   )
 }

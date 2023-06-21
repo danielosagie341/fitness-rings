@@ -69,18 +69,18 @@ const UserProfile = () => {
     <div className='shadow-3xl flex justify-between items-center p-3 rounded-3xl'>
         {
           displayIcon != '' ?
-            <p className='rounded-full object-contain bg-fuchsia-900 bg-opacity-50 h-14 w-14 mr-3 flex justify-center items-center text-white font-semibold text-[40px]'> <p className='-translate-y-2'> {displayIcon} </p> </p>
+            <p className='rounded-full object-contain bg-fuchsia-900 bg-opacity-50 h-14 w-14 mr-2 flex justify-center items-center text-white font-semibold text-[40px]'> <p className='-translate-y-2'> {displayIcon} </p> </p>
           :
-          <img className='rounded-full object-contain h-14 w-14 mr-3' src="./images/User.png" alt="profile photo" />
+          <img className='rounded-full object-contain h-14 w-14 mr-2' src="./images/User.png" alt="profile photo" />
         }
         
         <div>
-                  <p>{userData.surname} {' '} { userData.Name}</p>
-                <small>{ userData.email}</small>
+            <p>{userData.surname} {' '} { userData.Name}</p>
+            <p className='w-[100px] overflow-scroll no-scrollbar '>{ userData.email}</p>
         </div>
 
         <button onClick={ () => setDisplayForm(true)}>
-            <img className='h-5 w-5 rounded-full bg-black' src="./images/next.png" alt="next" />  
+            <img className=' h-5 w-5 rounded-full bg-black' src="./images/next.png" alt="next" />  
         </button>
     </div>
         
