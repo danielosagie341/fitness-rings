@@ -1,0 +1,14 @@
+GROUP 16 MEMBERS
+ 
+S/N	NAMES	MATRICULATION NUMBER
+1	Nwankwoala Kelechi	VUG/CSC/22/6834
+2	Nwankwo Stephine	VUG/CSC/22/
+3	Alademerin Salma Ore-Oluwa	VUG/CSC/22/7422
+4	Osagie Daniel Ehirehmen	VUG/CSC/22/7545
+5	Ajayi Iyanuoluwa Abdulkareem	VUG/CSC/22/6935
+6	Uhiara Chigozie Patrick	VUG/CSC/22/7517
+7	Jeol Barnabas	VUG/CSC/22/
+8	Ekele David Oche	VUG/CSC/22/7336
+9	Oba Abdulkadir	VUG/CSC/22/7335
+10	Okoh Vincent	VUG/CSC/22/
+11	BAMAS NIARIG EBENEZER	Vug/csc/22/756
