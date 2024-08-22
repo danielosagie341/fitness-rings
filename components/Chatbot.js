@@ -1,206 +1,155 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import '../styles/Home.module.css'
-
 
 const Chatbot = () => {
-   const [error, setError] = useState(null)
-  const [value, setValue] = useState("")
-  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState(null);
+  const [value, setValue] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [chatHistory, setChatHistory] = useState([]);
 
-  const Timeout = 120
-  const [chatHistory, setChatHistory] = useState([])
+  const Timeout = 120;
 
-  let data;
-  //to clear the input field
+  // Function to clear the input field
   const clear = () => {
-    setError(null)
-    setValue('')
-  }
+    setError(null);
+    setValue('');
+  };
 
-
-
-  //options to select randomly from 
-  const selectRandomOPtions = [
-    "I'm 25 and just starting my career. How should I be investing my money?",
-    "What's the best way to save for a down payment on a house?",
-    "My credit score is low. How can I improve it?",
-    "I'm considering investing in the stock market. How do I get started?",
-    "What are the best ways to reduce my taxes?",
-    "How can I create a budget that works for me?",
-    "My emergency fund is depleted. How do I rebuild it?",
-    "Should I rent or buy a home?",
-    "What are some ways to prepare for retirement?",
-    "I'm worried about student loan debt. What can I do?",
-  ]
-
-
-  const selectRandomly = () => {
-    const randomValue = selectRandomOPtions[Math.floor(Math.random() * selectRandomOPtions.length)]
-    setValue(randomValue)
-  }
-
-  // to fetch the data from the gemini server
+  // Function to fetch data from the server
   const fetchData = async () => {
     const options = {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
       },
       body: JSON.stringify({
         history: chatHistory,
-        message: value
-      })
-    }
+        message: value,
+      }),
+    };
 
-    const response = await fetch("https://gemini-server-main-fitness-rings.onrender.com/gemini/send-response", options)
-    const result = await response.text()
-    return result
+    const response = await fetch('https://gemini-server-main-fitness-rings.onrender.com/gemini/send-response', options);
+    const result = await response.text();
+    return result;
+  };
 
-  }
-
-
-
+  // Function to handle fetch data with a timeout
   const fetchDataAndHandleTimeout = async () => {
     try {
       const result = await Promise.race([
         fetchData(),
-        new Promise((resolve) => setTimeout(resolve, Timeout * 1000))
+        new Promise((resolve) => setTimeout(resolve, Timeout * 1000)),
       ]);
       return result;
     } catch (error) {
-      setError("Timeout, please check your internet connection");
+      setError('Timeout, please check your internet connection');
       setLoading(false);
     }
-  }
+  };
 
-
-
-
-
-  // use to send our query to the server`
+  // Function to send the query and get response
   const getResponse = async () => {
     if (!value) {
-      setError(" Error: please enter a value")
-      return
+      setError('Error: please enter a value');
+      return;
     }
 
     try {
-
-
-
-      //loading while awaiting response 
-      setLoading(true)
-      // its use to recieve messages from the server
-      data = await fetchDataAndHandleTimeout();
-
-
-      // Format bot response if needed (adjust this according to your response format)
+      setLoading(true);
+      const data = await fetchDataAndHandleTimeout();
       const formattedRes = data.split('\\n').map((part, index) => <p key={index}>{part}</p>);
 
-      setChatHistory(oldChatHsitory =>
-        [...oldChatHsitory, {
-          role: "user",
-          parts: value
+      setChatHistory([
+        {
+          role: 'user',
+          parts: value,
         },
         {
-          role: "Geminoid",
-          parts: formattedRes
-        }]
-      )
+          role: 'Geminoid',
+          parts: formattedRes,
+        },
+      ]);
 
-      setValue('')
-      setLoading(false)
+      setValue('');
+      setLoading(false);
     } catch (error) {
-      setLoading(false)
-      setError("something went wrong")
-
+      setLoading(false);
+      setError('Something went wrong');
     }
-  }
+  };
 
-
-
+  // Function to listen for Enter key press
   const listenEnter = (e) => {
-    if (e.key === "Enter") {
-      getResponse()
+    if (e.key === 'Enter') {
+      getResponse();
     }
-  }
+  };
 
-  // Separate the messages by role
-  const userMessages = chatHistory.filter(item => item.role === 'user');
-  const geminoidMessages = chatHistory.filter(item => item.role === 'Geminoid');
-
-  // Calculate the minimum length to avoid index out of bounds
-  const minLength = Math.min(userMessages.length, geminoidMessages.length);
-
-  // Create an array to hold the interleaved messages
-  const interleavedMessages = [];
-
-  // Interleave the messages starting from the last pair
-  for (let i = minLength - 1; i >= 0; i--) {
-    interleavedMessages.push(userMessages[i], geminoidMessages[i]);
-  }
-
-  // Add any remaining messages if one array is longer than the other
-  if (userMessages.length > minLength) {
-    interleavedMessages.push(...userMessages.slice(0, userMessages.length - minLength).reverse());
-  }
-  if (geminoidMessages.length > minLength) {
-    interleavedMessages.push(...geminoidMessages.slice(0, geminoidMessages.length - minLength).reverse());
-  }
-
+  // Get the latest message from the chat history
+  const latestMessage = chatHistory[chatHistory.length - 1];
 
   return (
-    <div className="app">
-      <h1 className='app-title'>PEACE LLM CHATBOT</h1>
-      <section className='app'>
-        <p>
-          what do you want to know?
-          <button className='suprise-me' onClick={selectRandomly} disabled={!chatHistory || loading}> Get a random crypto fact👍 </button>
-        </p>
-
-
-
-        <div className='search-container'>
-          <input value={value} placeholder='Need some financial advice?' onKeyDown={listenEnter} onChange={e => setValue(e.target.value)}></input>
-          {!error && <button className='search-button' onClick={getResponse}>Search</button>}
-          {error && <button className='search-button' onClick={clear}>clear</button>
-          }
-
-        </div>
-        <p>{error}</p>
-
-        
-
-        <div className='search-result'>
-          
-           {loading && (
-            <div className='Answer'>
-              <div class="spinner"></div>
-
-              </div>
-          
+    <div style={{ fontFamily: 'Arial, sans-serif', padding: '20px', maxWidth: '600px', margin: 'auto' }}>
+      <h1 style={{ textAlign: 'center' }}>SMART HEALTH AI</h1>
+      <section style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+        <div style={{ display: 'flex', gap: '10px' }}>
+          <input
+            value={value}
+            placeholder="Need some financial advice?"
+            onKeyDown={listenEnter}
+            onChange={(e) => setValue(e.target.value)}
+            style={{ flex: 1, padding: '10px', borderRadius: '5px', border: '1px solid #ccc' }}
+          />
+          <button
+            onClick={getResponse}
+            style={{
+              padding: '10px 20px',
+              backgroundColor: '#007bff',
+              color: '#fff',
+              border: 'none',
+              borderRadius: '5px',
+              cursor: 'pointer',
+              fontSize: '16px',
+            }}
+            disabled={loading}
+          >
+            Search
+          </button>
+          {error && (
+            <button
+              onClick={clear}
+              style={{
+                padding: '10px 20px',
+                backgroundColor: '#dc3545',
+                color: '#fff',
+                border: 'none',
+                borderRadius: '5px',
+                cursor: 'pointer',
+                fontSize: '16px',
+              }}
+            >
+              Clear
+            </button>
           )}
-          
-          {interleavedMessages.map((chatItem, index) => (
-        <div className='Answer' key={index}>
-          <p>
-            {chatItem.role} : {Array.isArray(chatItem.parts) 
-              ? chatItem.parts.map((part, idx) => (
-                  <span key={idx}>{typeof part === 'object' ? part : part.toString()}</span>
-                ))
-              : chatItem.parts}
-          </p>
         </div>
-      ))}
-
-         
-
+        <p style={{ color: 'red' }}>{error}</p>
+        <div style={{ padding: '10px', border: '1px solid #ddd', borderRadius: '5px', backgroundColor: '#f9f9f9' }}>
+          {loading && (
+            <div style={{ textAlign: 'center' }}>
+              <div className="spinner" style={{ border: '4px solid #f3f3f3', borderRadius: '50%', borderTop: '4px solid #007bff', width: '30px', height: '30px', animation: 'spin 2s linear infinite' }}></div>
+            </div>
+          )}
+          {latestMessage && (
+            <div>
+              <p>
+                <strong>{latestMessage.role}:</strong> {latestMessage.parts}
+              </p>
+            </div>
+          )}
         </div>
       </section>
-
     </div>
   );
-}
+};
 
 export default Chatbot;
