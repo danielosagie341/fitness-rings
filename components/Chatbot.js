@@ -53,7 +53,7 @@ const Chatbot = () => {
       })
     }
 
-    const response = await fetch("http://localhost:5000/gemini/send-response", options)
+    const response = await fetch("https://gemini-server-main-fitness-rings.onrender.com/gemini/send-response", options)
     const result = await response.text()
     return result
 
