@@ -95,7 +95,7 @@ const Chatbot = () => {
         <div style={{ display: 'flex', gap: '10px' }}>
           <input
             value={value}
-            placeholder="Need some financial advice?"
+            placeholder="Need some health advice?"
             onKeyDown={listenEnter}
             onChange={(e) => setValue(e.target.value)}
             style={{ flex: 1, padding: '10px', borderRadius: '5px', border: '1px solid #ccc' }}
